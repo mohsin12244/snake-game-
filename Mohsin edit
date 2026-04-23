@@ -1,0 +1,71 @@
+# ================================
+# BACKGROUND REMOVER FULL PROJECT
+# ================================
+
+# 🔹 requirements.txt
+streamlit
+rembg
+pillow
+
+
+# 🔹 app.py
+import streamlit as st
+from rembg import remove
+from PIL import Image
+import io
+
+st.set_page_config(page_title="Background Remover", layout="centered")
+
+st.title("🖼️ Background Remover App")
+st.write("Upload image aur background automatically remove ho jayega.")
+
+uploaded_file = st.file_uploader("Image upload karo", type=["png", "jpg", "jpeg"])
+
+if uploaded_file is not None:
+    input_image = Image.open(uploaded_file)
+
+    st.subheader("Original Image")
+    st.image(input_image, use_column_width=True)
+
+    # Convert image to bytes
+    img_bytes = io.BytesIO()
+    input_image.save(img_bytes, format="PNG")
+    img_bytes = img_bytes.getvalue()
+
+    # Remove background
+    output = remove(img_bytes)
+
+    # Convert back to image
+    output_image = Image.open(io.BytesIO(output))
+
+    st.subheader("Background Removed Image")
+    st.image(output_image, use_column_width=True)
+
+    # Download button
+    st.download_button(
+        label="Download Image",
+        data=output,
+        file_name="removed_bg.png",
+        mime="image/png"
+    )
+
+
+# 🔹 README.md
+# Background Remover App
+
+This is a simple Streamlit app that removes background from images using AI.
+
+## Features
+- Upload image
+- Automatic background removal
+- Download processed image
+
+## Install
+pip install -r requirements.txt
+
+## Run
+streamlit run app.py
+
+
+# 🔹 RUN COMMAND (Terminal)
+# streamlit run app.py
